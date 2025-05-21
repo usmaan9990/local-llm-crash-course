@@ -33,11 +33,15 @@ def get_prompt(inst):
 @app.route("/", methods=['POST', 'GET'])
 def submit():
     reply = ""
-    if request.method == 'POST':
-        que = request.form["prompt"]
-        prompt = get_prompt(que)
-        model = llm(prompt, max_tokens=512)
-        reply = model["choices"][0]["text"].strip()
+    try:
+        if request.method == 'POST':
+            que = request.form["prompt"]
+            prompt = get_prompt(que)
+            model = llm(prompt, max_tokens=512)
+            reply = model["choices"][0]["text"].strip()
+    except Exception as e:
+        print("🔥 Error occurred:", e)  # Print the real issue
+        reply = "Something went wrong. Check terminal for details."
 
     return render_template("index.html", response=reply)
 
